@@ -13,9 +13,11 @@ const categories = [
 const PORT = 8082;
 
 app.get('/categories', (req, res) => {
-    Category.findAll().then((categories) => {
-        res.send(categories);
-    });
+
+    // Category.findAll().then((categories) => {
+    //     res.send(categories);
+    // });
+    res.send(categories);
 });
 
 app.post('/categories', (req, res) => {
