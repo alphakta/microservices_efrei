@@ -1,0 +1,51 @@
+version: "3"
+services:
+  category_service:
+    build: ./categories-service
+    volumes: 
+      - ./categories-service/:/usr/src/app/
+    ports:
+      - "8082:8082"
+    expose:
+      - "8082"
+    networks:
+      - my-network
+
+  book_service:
+    build: ./books-service
+    volumes: 
+      - ./books-service/:/usr/src/app/
+    ports:
+      - "8081:8081"
+    expose:
+      - "8081"
+    networks:
+      - my-network
+
+  author_service:
+    build: ./authors-service
+    volumes: 
+      - ./authors-service/:/usr/src/app/
+    ports:
+      - "8080:8080"
+    expose:
+      - "8080"
+    networks:
+      - my-network
+
+  mysql:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    volumes: 
+      - ./mysql-init-scripts:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+    networks:
+      - my-network
+
+networks:
+  my-network:
