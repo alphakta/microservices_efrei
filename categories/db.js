@@ -1,6 +1,6 @@
 import { Sequelize, DataTypes } from "sequelize";
 
-const sequelize = new Sequelize("mysql://root:root@localhost:3306/microservice-category");
+const sequelize = new Sequelize("mysql://root:Asko94190@localhost:3306/microservice-category");
 
 const Category = sequelize.define("categories", {
     idCategory: {
@@ -13,5 +13,7 @@ const Category = sequelize.define("categories", {
         allowNull: false,
     },
 });
+
+sequelize.sync();
 
 export default Category;

@@ -1,7 +1,7 @@
 import express from 'express';
+import Authors from './db.js';
 
 const app = express();
-
 app.use(express.json());
 
 const authors = [
@@ -12,38 +12,59 @@ const authors = [
 const PORT = 8080;
 
 app.get('/authors', (req, res) => {
-    res.send(authors);
+    Authors.findAll()
+        .then((authors) => {
+            res.send(authors);
+        })
+        .catch((err) => {
+            res.status(500).send({ message: err.message || "Some error occurred while retrieving authors.", });
+        }
+    );  
 });
 
 app.post('/authors', (req, res) => {
     const author = req.body;
-    authors.push(author);
-    res.send(authors);
+    Authors.create(author)
+        .then((author) => {
+            res.send(author);
+        })
+        .catch((err) => {
+            res.status(500).send({ message: err.message || "Some error occurred while creating the author." });
+        }
+    );
 });
 
 app.get('/authors/:id', (req, res) => {
     const id = parseInt(req.params.id);
-    const author = authors.find((author) => author.id === id);
-    
-    if(author) {
+    const author = Authors.findAll({ where: { idAuthor: id }})
+    .then((author) => {
         res.send(author);
-    } else {
-        res.status(404).send('Author not found');
-    }
+    })
+    .catch((err) => {
+        res.status(500).send({ message: err.message || `Some error occurred while retrieving author ${id}.` });
+    });
 });
 
 app.put('/authors/:id', (req, res) => {
     const id = parseInt(req.params.id);
-    const author = req.body;
-    const index = authors.findIndex((author) => author.id === id);
-    authors[index] = author;
-    res.send(authors);
+    const author = Authors.update(req.body, { where: { idAuthor: id }})
+    .then((author) => {
+        res.send(author);
+    })
+    .catch((err) => {
+        res.status(500).send({ message: err.message || `Some error occurred while updating author ${id}.` });
+    });
 });
 
 app.delete('/authors/:id', (req, res) => {
     const id = parseInt(req.params.id);
-    authors = authors.filter((author) => author.id !== id);
-    res.send(authors);
+    const author = Authors.destroy({ where: { idAuthor: id }})
+    .then((author) => {
+        res.send(author);
+    })
+    .catch((err) => {
+        res.status(500).send({ message: err.message || `Some error occurred while deleting author ${id}.` });
+    });
 });
     
 app.listen(
