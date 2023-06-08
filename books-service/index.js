@@ -6,11 +6,6 @@ const app = express();
 
 app.use(express.json());
 
-const books = [
-    { id: 1, title: 'Jurassic Park 1', authorId: 1, categoryId: 1 },
-    { id: 2, title: 'Jurassic Park 2', authorId: 2, categoryId: 2 },
-    { id: 3, title: 'Jurassic Park 3', authorId: 3, categoryId: 3 },
-];
 const PORT = 8081;
 const PORT_AUTHORS = 8080;
 const PORT_CATEGORIES = 8082;
