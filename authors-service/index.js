@@ -1,4 +1,5 @@
 import express from 'express';
+import axios from 'axios';
 import Authors from './db.js';
 
 const app = express();
@@ -10,6 +11,7 @@ const authors = [
     { id: 3, name: 'George', lastName: 'R. Martin' },
 ]
 const PORT = 8080;
+const PORT_BOOKS = 8081;
 
 app.get('/authors', (req, res) => {
     Authors.findAll()
@@ -56,15 +58,15 @@ app.put('/authors/:id', (req, res) => {
     });
 });
 
-app.delete('/authors/:id', (req, res) => {
+app.delete('/authors/:id', async (req, res) => {
     const id = parseInt(req.params.id);
-    const author = Authors.destroy({ where: { idAuthor: id }})
-    .then((author) => {
-        res.send(author);
-    })
-    .catch((err) => {
+    try {
+        await Authors.destroy({ where: { idAuthor: id }});
+        await axios.get(`http://localhost:${PORT_BOOKS}/books/eventBook/${id}`);
+        res.send({ message: `Author ${id} deleted successfully.` });
+    } catch (err) {
         res.status(500).send({ message: err.message || `Some error occurred while deleting author ${id}.` });
-    });
+    }
 });
     
 app.listen(

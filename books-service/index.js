@@ -67,6 +67,16 @@ app.put('/books/:id', (req, res) => {
     });
 });
 
+app.get('/books/eventBook/:id', async (req, res) => {
+    const id = parseInt(req.params.id);
+    try {
+        const book = await Books.update({ authorId: null }, { where: { authorId: id } });
+        res.send({ message: `Books with authorId ${id} updated successfully.` });
+    } catch (err) {
+        res.status(500).send({ message: err.message || `Some error occurred while updating books with authorId ${id}.` });
+    }
+});
+
 app.delete('/books/:id', (req, res) => {
     const id = parseInt(req.params.id);
     const book = Books.destroy({ where: { idBook: id }})
